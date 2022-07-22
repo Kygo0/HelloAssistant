@@ -1,4 +1,3 @@
-
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox, simpledialog
@@ -57,7 +56,7 @@ def confirmDeleteAll():
 # Lets the user choose what app to delete from the voice assistant.
 def deletionMode():
     deletion = Toplevel()
-    deletion.iconphoto(False, PhotoImage(file='images/backgrounds/settings.ico'))
+    deletion.iconphoto(False, PhotoImage(file='backgrounds/settings.ico'))
     deletion.geometry("600x200")
     deletion.configure(bg='blue')
     app_width3 = 600
@@ -132,7 +131,7 @@ def deletionMode():
 
             hdc.SelectObject(hbmp)
             hdc.DrawIcon((0, 0), small[0])
-            hbmp.SaveBitmapFile(hdc, 'images/icons/' + str(nameIconList[adding]) + '.bmp')
+            hbmp.SaveBitmapFile(hdc, 'icons/' + str(nameIconList[adding]) + '.bmp')
             adding += 1
         except Exception:
             pass
@@ -156,7 +155,7 @@ def deletionMode():
         Button(deletion, text=execute.upper(), command=deletePressed, padx=30, pady=30, bg='pink').place(x=0,
                                                                                                          y=add_y_coordinate)
 
-        image = Image.open('images\\icons\\' + str(nameList[addIcon]) + '.bmp')
+        image = Image.open('icons\\' + str(nameList[addIcon]) + '.bmp')
         img = image.resize((15, 15))
         my_img = ImageTk.PhotoImage(img)
         lbl = Label(deletion, image=my_img, padx=5, pady=5)
@@ -176,7 +175,7 @@ def deletionMode():
 def newCreate():
     global save, saveList
     new = Toplevel()
-    new.iconphoto(False, PhotoImage(file=r'images/backgrounds/settings.ico'))
+    new.iconphoto(False, PhotoImage(file=r'backgrounds/settings.ico'))
     new.geometry("600x200")
     app_width2 = 400
     app_height2 = 300
@@ -232,7 +231,7 @@ canv.grid(row=2, column=3)
 
 # In case user deletes `FinalBackground.png` from files.
 try:
-    img = ImageTk.PhotoImage(Image.open("images/backgrounds/FinalBackground.png"))
+    img = ImageTk.PhotoImage(Image.open("backgrounds/FinalBackground.png"))
     canv.create_image(0, 0, anchor=NW, image=img)
 except FileNotFoundError:
     errorBackground = Label(root, text='Background image has been deleted or its file destination has been changed.',
@@ -250,7 +249,7 @@ root.geometry(f'{app_width}x{app_height}+{int(x)}+{int(y)}')
 
 # In case user deletes `settings.ico` from files.
 try:
-    photo = PhotoImage(file="images/backgrounds/settings.ico")
+    photo = PhotoImage(file="backgrounds/settings.ico")
     root.iconphoto(False, photo)
 except TclError:
     pass  # Uses the default logo tkinter provides.
@@ -263,8 +262,6 @@ createNew.place(x=10, y=170)
 deleteMode = Button(root, text="Delete", command=deletionMode, bg='pink', font='bold')
 deleteMode.place(x=10, y=240)
 
-
-
 # Greet the user.
 now = datetime.now()
 current_time = now.strftime("%H:%M:%S")
@@ -272,7 +269,7 @@ timeInt = int(current_time[0:2])
 
 if 12 > timeInt > 5:
     try:
-        bg1 = PhotoImage(file="images/backgrounds/GoodMorning.png")
+        bg1 = PhotoImage(file="backgrounds/GoodMorning.png")
         GreetLabel = Label(root, image=bg1, bg='blue')
         GreetLabel.place(x=20, y=80)
     except TclError:
@@ -281,7 +278,7 @@ if 12 > timeInt > 5:
 elif 12 < timeInt < 17:
     try:
         bg1 = PhotoImage(
-            file="images/backgrounds/GoodAfternoon.png")  # Inserting "try/exception" statement in case user
+            file="backgrounds/GoodAfternoon.png")  # Inserting "try/exception" statement in case user
         GreetLabel = Label(root, image=bg1, bg='blue')  # deletes .png images from files
         GreetLabel.place(x=20, y=80)
     except TclError:
@@ -289,7 +286,7 @@ elif 12 < timeInt < 17:
         GreetLabel.place(x=20, y=80)
 else:
     try:
-        bg1 = PhotoImage(file="images/backgrounds/GoodEvening.png")
+        bg1 = PhotoImage(file="backgrounds/GoodEvening.png")
         GreetLabel = Label(root, image=bg1, bg='blue')
         GreetLabel.place(x=20, y=80)
     except TclError:
