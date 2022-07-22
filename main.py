@@ -1,9 +1,10 @@
+
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox, simpledialog
 from tkinter.messagebox import askokcancel, showinfo, WARNING
 import mysql.connector
-from PIL import ImageTk, Image
+from Pillow import ImageTk, Image
 from datetime import datetime
 import win32ui
 import win32gui
