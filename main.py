@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import filedialog
-from tkinter import messagebox, simpledialog
+from tkinter import messagebox
 from tkinter.messagebox import askokcancel, showinfo, WARNING
 import mysql.connector
 from PIL import ImageTk, Image
@@ -94,7 +94,7 @@ def deletionMode():
                 file.write('\n'.join(new_text) + '\n')
                 file.close()
 
-    # Displaying icons of setup apps.t
+    # Displaying icons of setup apps.
     mycursor.execute("SELECT path FROM filepaths;")
     db.commit()
 
