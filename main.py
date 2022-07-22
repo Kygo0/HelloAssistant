@@ -94,7 +94,7 @@ def deletionMode():
                 file.write('\n'.join(new_text) + '\n')
                 file.close()
 
-    # Displaying icons of setup apps.
+    # Display icons of setup apps.
     mycursor.execute("SELECT path FROM filepaths;")
     db.commit()
 
@@ -171,7 +171,7 @@ def deletionMode():
         deleteEverything.place(x=490, y=15)
 
 
-# Lets the user set up an app for the voice assistant.
+# Lets the user set up a new app for the voice assistant.
 def newCreate():
     global save, saveList
     new = Toplevel()
