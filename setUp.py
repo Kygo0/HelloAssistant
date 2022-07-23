@@ -10,7 +10,6 @@ import win32gui
 import win32con
 import win32api
 
-print('Hello Tsitso')
 db = mysql.connector.connect(
     host="localhost",
     user="root",
