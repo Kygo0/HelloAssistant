@@ -94,7 +94,7 @@ def deletionMode():
                 file.write('\n'.join(new_text) + '\n')
                 file.close()
 
-    # Display icons of setup apps.
+    # Display icons of apps that are already setup.
     mycursor.execute("SELECT path FROM filepaths;")
     db.commit()
 
