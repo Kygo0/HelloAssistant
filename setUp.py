@@ -23,7 +23,9 @@ mycursor.execute("CREATE DATABASE IF NOT EXISTS pathdatabase")
 mycursor.execute(
     "CREATE TABLE IF NOT EXISTS filepaths (id INT AUTO_INCREMENT PRIMARY KEY, path VARCHAR(255), name VARCHAR(255))")
 
-saveList = [], setPathList = [], nameIconList = []
+saveList = []
+setPathList = []
+nameIconList = []
 
 
 # Deletes all the apps that are set up for the voice assistant.
