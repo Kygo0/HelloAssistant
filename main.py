@@ -23,7 +23,7 @@ mycursor.execute("CREATE DATABASE IF NOT EXISTS pathdatabase")
 mycursor.execute(
     "CREATE TABLE IF NOT EXISTS filepaths (id INT AUTO_INCREMENT PRIMARY KEY, path VARCHAR(255), name VARCHAR(255))")
 
-saveList = []
+saveList = [], setPathList = [], nameIconList = []
 
 
 # Deletes all the apps that are set up for the voice assistant.
@@ -98,8 +98,6 @@ def deletionMode():
     mycursor.execute("SELECT path FROM filepaths;")
     db.commit()
 
-    setPathList = []
-
     for setPath in mycursor:
         stripString1 = str(setPath).lstrip("(").rstrip(")")
         stripString2 = str(stripString1).rstrip(",")
@@ -109,8 +107,6 @@ def deletionMode():
 
     mycursor.execute("SELECT name FROM filepaths;")
     db.commit()
-
-    nameIconList = []
 
     for nameIcon in mycursor:
         stripString1 = str(nameIcon).lstrip("(").rstrip(")")
