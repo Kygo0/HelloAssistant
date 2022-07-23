@@ -70,7 +70,7 @@ def deletionMode():
     deletion.geometry(f'{app_width3}x{app_height3}+{int(x3)}+{int(y3)}')
     deletion.title("Delete configured apps")
 
-    # Save icon of apps
+    # Save icon of apps.
     ico_x = win32api.GetSystemMetrics(win32con.SM_CXICON)
     ico_y = win32api.GetSystemMetrics(win32con.SM_CYICON)
 
@@ -277,7 +277,7 @@ elif 12 < timeInt < 17:
     try:
         bg1 = PhotoImage(
             file="backgrounds/GoodAfternoon.png")  # Inserting "try/exception" statement in case user
-        GreetLabel = Label(root, image=bg1, bg='blue')  # deletes .png images from files
+        GreetLabel = Label(root, image=bg1, bg='blue')  # deletes .png images from files.
         GreetLabel.place(x=20, y=80)
     except TclError:
         GreetLabel = Label(root, text='Good Afternoon', font='bold 20', bg='pink')
