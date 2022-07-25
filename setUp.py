@@ -89,12 +89,6 @@ def deletionMode():
             adr = (str(stripString4),)
             mycursor.execute(sql, adr)
             db.commit()
-            with open('save.txt', 'r') as file:
-                text = file.read().splitlines()
-            new_text = [line for line in text if line != stripString4]
-            with open('save.txt', 'w') as file:
-                file.write('\n'.join(new_text) + '\n')
-                file.close()
 
     # Display icons of apps that are already setup.
     mycursor.execute("SELECT path FROM filepaths;")
@@ -199,12 +193,6 @@ def newCreate():
                 db.commit()
             except mysql.connector.errors.InternalError:
                 showinfo(title="Error", message="Not connected to database.")
-        except NameError:
-            pass
-        try:
-            with open('save.txt', 'a') as f:
-                f.write(save + '\n')
-                f.close()
         except NameError:
             pass
 
