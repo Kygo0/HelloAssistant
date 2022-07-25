@@ -46,9 +46,6 @@ def confirmDeleteAll():
             showinfo(
                 title='DELETION',
                 message=msg)
-            file = open("save.txt", "a")
-            file.truncate(0)
-            file.close()
         except mysql.connector.errors.InternalError:
             messagebox.showerror(title="Error", message="ERROR: Please close the app and try again")
     else:
