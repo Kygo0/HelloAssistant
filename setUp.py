@@ -165,7 +165,7 @@ def deletionMode():
     else:
         for execute in nameList:
             Button(deletion, text=execute.upper(), command=deletePressed, padx=30, pady=30, bg='pink').place(x=0,
-                                                                                                         y=add_y_coordinate)
+                                                                                                             y=add_y_coordinate)
 
             image = Image.open('icons\\' + str(nameList[addIcon]) + '.bmp')
             img = image.resize((15, 15))
