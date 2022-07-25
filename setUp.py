@@ -26,6 +26,14 @@ mycursor.execute(
 saveList = []
 setPathList = []
 nameIconList = []
+global counter
+counter = 0
+
+
+def close_window():
+    global running
+    running = False  # turn off while loop
+    print("Window closed")
 
 
 # Deletes all the apps that are set up for the voice assistant.
@@ -54,19 +62,32 @@ def confirmDeleteAll():
 
 # Lets the user choose what app to delete from the voice assistant.
 def deletionMode():
-    deletion = Toplevel()
-    deletion.iconphoto(False, PhotoImage(file='backgrounds/settings.ico'))
-    deletion.geometry("600x200")
-    deletion.configure(bg='blue')
-    app_width3 = 600
-    app_height3 = 500
-    screen_width3 = root.winfo_screenwidth()
-    screen_height3 = root.winfo_screenheight()
-    x3 = (screen_width3 / 2) - (app_width3 / 2)
-    y3 = (screen_height3 / 2) - (app_height3 / 2)
-    deletion.geometry(f'{app_width3}x{app_height3}+{int(x3)}+{int(y3)}')
-    deletion.title("Delete configured apps")
+    global counter, deletion
+    if counter < 1:
+        deletion = Toplevel()
+        deletion.iconphoto(False, PhotoImage(file='backgrounds/settings.ico'))
+        deletion.geometry("600x200")
+        deletion.configure(bg='blue')
+        deletion.protocol("WM_DELETE_WINDOW", close_window)
+        app_width3 = 600
+        app_height3 = 500
+        screen_width3 = root.winfo_screenwidth()
+        screen_height3 = root.winfo_screenheight()
+        x3 = (screen_width3 / 2) - (app_width3 / 2)
+        y3 = (screen_height3 / 2) - (app_height3 / 2)
+        deletion.geometry(f'{app_width3}x{app_height3}+{int(x3)}+{int(y3)}')
+        deletion.title("Delete configured apps")
+        counter += 1
+    else:
+        pass
 
+    running = True
+    # This is an endless loop stopped only by setting 'running' to 'False'
+    while running:
+        for i in range(200):
+            if not running:
+                break
+            deletion.update()
     # Save icon of apps.
     ico_x = win32api.GetSystemMetrics(win32con.SM_CXICON)
     ico_y = win32api.GetSystemMetrics(win32con.SM_CYICON)
