@@ -220,14 +220,15 @@ def newCreate():
             pass
         new.destroy()
 
-    newLabel = Label(new, text='Setup an app', font=('Calibri', 20, "bold"), pady=50, padx=200,fg='pink',bg='#3E45A1')
+    newLabel = Label(new, text='Setup an app', font=('Calibri', 20, "bold"), pady=50, padx=200, fg='pink', bg='#3E45A1')
     newLabel.pack()
 
     LabelSmall = Label(new, text='App Name                   ', pady=4, padx=4, bg='pink',
                        font=('Calibri', 13, 'bold'))
     LabelSmall.place(x=60, y=165)
 
-    saveName = Button(new, text='Apply & find file', command=inCreate, padx=4, pady=4, font=('Calibri', 13, 'bold'),bg='pink')
+    saveName = Button(new, text='Apply & find file', command=inCreate, padx=4, pady=4, font=('Calibri', 13, 'bold'),
+                      bg='pink')
     saveName.place(x=230, y=190)
 
     e = Entry(new, width=27, bg='white')
