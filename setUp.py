@@ -70,7 +70,8 @@ def deletionMode():
         deletion = Toplevel()
         deletion.iconphoto(False, PhotoImage(file='backgrounds/settings.ico'))
         deletion.geometry("600x200")
-        deletion.configure(bg='blue')
+        deletion.resizable(False, False)
+        deletion.configure(bg='#3E45A1')
         deletion.bind("<Destroy>", on_destroy)
         app_width3 = 600
         app_height3 = 500
@@ -160,7 +161,7 @@ def deletionMode():
     if not nameList:
         emptyDel = Label(deletion,
                          text="There are no apps available to be deleted.\nYou can add some by clicking Create New on the main window",
-                         bg='blue', padx=25, pady=50, font=30)
+                         bg='#3E45A1', padx=25, pady=50, font=30)
         emptyDel.place(x=0, y=100)
     else:
         for execute in nameList:
@@ -189,6 +190,8 @@ def newCreate():
     new = Toplevel()
     new.iconphoto(False, PhotoImage(file=r'backgrounds/settings.ico'))
     new.geometry("600x200")
+    new.configure(bg='#3E45A1')
+    new.resizable(False, False)
     app_width2 = 400
     app_height2 = 300
     screen_width2 = root.winfo_screenwidth()
@@ -217,14 +220,14 @@ def newCreate():
             pass
         new.destroy()
 
-    newLabel = Label(new, text='Setup an app', font=('Calibri', 18, "bold"), pady=50, padx=200, bg='pink')
+    newLabel = Label(new, text='Setup an app', font=('Calibri', 20, "bold"), pady=50, padx=200,fg='pink',bg='#3E45A1')
     newLabel.pack()
 
     LabelSmall = Label(new, text='App Name                   ', pady=4, padx=4, bg='pink',
                        font=('Calibri', 13, 'bold'))
     LabelSmall.place(x=60, y=165)
 
-    saveName = Button(new, text='Apply & find file', command=inCreate, padx=4, pady=4, font=('Calibri', 13, 'bold'))
+    saveName = Button(new, text='Apply & find file', command=inCreate, padx=4, pady=4, font=('Calibri', 13, 'bold'),bg='pink')
     saveName.place(x=230, y=190)
 
     e = Entry(new, width=27, bg='white')
@@ -233,6 +236,7 @@ def newCreate():
 
 root = Tk()
 root.title('Assistant Setup')
+root.resizable(False, False)
 canv = Canvas(root, width=700, height=600, bg='white')
 canv.grid(row=2, column=3)
 
