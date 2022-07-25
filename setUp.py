@@ -157,24 +157,30 @@ def deletionMode():
     add_y_coordinate = 0
     add_y_coordinate2 = 0
     addIcon = 0
-    for execute in nameList:
-        Button(deletion, text=execute.upper(), command=deletePressed, padx=30, pady=30, bg='pink').place(x=0,
+    if not nameList:
+        emptyDel = Label(deletion,
+                         text="There are no apps available to be deleted.\nYou can add some by clicking Create New on the main window",
+                         bg='blue', padx=25, pady=50, font=30)
+        emptyDel.place(x=0, y=100)
+    else:
+        for execute in nameList:
+            Button(deletion, text=execute.upper(), command=deletePressed, padx=30, pady=30, bg='pink').place(x=0,
                                                                                                          y=add_y_coordinate)
 
-        image = Image.open('icons\\' + str(nameList[addIcon]) + '.bmp')
-        img = image.resize((15, 15))
-        my_img = ImageTk.PhotoImage(img)
-        lbl = Label(deletion, image=my_img, padx=5, pady=5)
-        lbl.place(x=0, y=add_y_coordinate2)
-        lbl.image = my_img
+            image = Image.open('icons\\' + str(nameList[addIcon]) + '.bmp')
+            img = image.resize((15, 15))
+            my_img = ImageTk.PhotoImage(img)
+            lbl = Label(deletion, image=my_img, padx=5, pady=5)
+            lbl.place(x=0, y=add_y_coordinate2)
+            lbl.image = my_img
 
-        add_y_coordinate += 90
-        add_y_coordinate2 += 90
-        addIcon += 1
+            add_y_coordinate += 90
+            add_y_coordinate2 += 90
+            addIcon += 1
 
-        # Button that deletes every app that is set up for the voice assistant.
-        deleteEverything = Button(deletion, text="Delete All", command=confirmDeleteAll, bg='pink', font="bold")
-        deleteEverything.place(x=490, y=15)
+            # Button that deletes every app that is set up for the voice assistant.
+            deleteEverything = Button(deletion, text="Delete All", command=confirmDeleteAll, bg='pink', font="bold")
+            deleteEverything.place(x=490, y=15)
 
 
 # Lets the user set up a new app for the voice assistant.
