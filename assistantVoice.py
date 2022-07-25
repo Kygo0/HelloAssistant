@@ -13,8 +13,6 @@ db = mysql.connector.connect(
     database="pathdatabase"
 )
 
-mycursor = db.cursor()
-
 
 def speak(text):
     engine = pyttsx3.init()

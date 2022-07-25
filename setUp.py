@@ -30,14 +30,16 @@ global counter
 counter = 0
 
 
-def close_window():
-    global running
-    running = False  # turn off while loop
-    print("Window closed")
+def on_destroy(event):
+    global counter
+    if event.widget != root:
+        counter = 0
+        return
 
 
 # Deletes all the apps that are set up for the voice assistant.
 def confirmDeleteAll():
+    global deletion
     answer = askokcancel(
         title='DELETION',
         message='Are you sure?\nTHIS IS AN IRREVERSIBLE ACTION',
@@ -58,6 +60,7 @@ def confirmDeleteAll():
             messagebox.showerror(title="Error", message="ERROR: Please close the app and try again")
     else:
         pass
+    deletion.destroy()
 
 
 # Lets the user choose what app to delete from the voice assistant.
@@ -68,7 +71,7 @@ def deletionMode():
         deletion.iconphoto(False, PhotoImage(file='backgrounds/settings.ico'))
         deletion.geometry("600x200")
         deletion.configure(bg='blue')
-        deletion.protocol("WM_DELETE_WINDOW", close_window)
+        deletion.bind("<Destroy>", on_destroy)
         app_width3 = 600
         app_height3 = 500
         screen_width3 = root.winfo_screenwidth()
@@ -80,15 +83,7 @@ def deletionMode():
         counter += 1
     else:
         pass
-
-    running = True
-    # This is an endless loop stopped only by setting 'running' to 'False'
-    while running:
-        for i in range(200):
-            if not running:
-                break
-            deletion.update()
-    # Save icon of apps.
+    # Saves the icons of every app.
     ico_x = win32api.GetSystemMetrics(win32con.SM_CXICON)
     ico_y = win32api.GetSystemMetrics(win32con.SM_CYICON)
 
@@ -107,6 +102,7 @@ def deletionMode():
             adr = (str(stripString4),)
             mycursor.execute(sql, adr)
             db.commit()
+            deletion.destroy()
 
     # Display icons of apps that are already setup.
     mycursor.execute("SELECT path FROM filepaths;")
@@ -213,6 +209,7 @@ def newCreate():
                 showinfo(title="Error", message="Not connected to database.")
         except NameError:
             pass
+        new.destroy()
 
     newLabel = Label(new, text='Setup an app', font=('Calibri', 18, "bold"), pady=50, padx=200, bg='pink')
     newLabel.pack()
