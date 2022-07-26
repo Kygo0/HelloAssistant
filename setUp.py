@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter.messagebox import askokcancel, showinfo, WARNING
-import mysql.connector
+import sqlite3
 from PIL import ImageTk, Image
 from datetime import datetime
 import win32ui
@@ -10,18 +10,11 @@ import win32gui
 import win32con
 import win32api
 
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="root",
-    database="pathdatabase"
-)
+mycursor = sqlite3.connect('Apps.db')
 
-mycursor = db.cursor(buffered=True)
-
-mycursor.execute("CREATE DATABASE IF NOT EXISTS pathdatabase")
 mycursor.execute(
     "CREATE TABLE IF NOT EXISTS filepaths (id INT AUTO_INCREMENT PRIMARY KEY, path VARCHAR(255), name VARCHAR(255))")
+cur = mycursor.cursor()
 
 saveList = []
 setPathList = []
@@ -46,18 +39,18 @@ def confirmDeleteAll():
         icon=WARNING)
 
     if answer:
-        try:
-            mycursor.execute("DELETE FROM filepaths;")
-            db.commit()
-            if mycursor.rowcount == 0:
-                msg = 'No content available for deletion'
-            else:
-                msg = 'Everything was successfully deleted'
-            showinfo(
-                title='DELETION',
-                message=msg)
-        except mysql.connector.errors.InternalError:
-            messagebox.showerror(title="Error", message="ERROR: Please close the app and try again")
+        mycursor.execute("DELETE FROM filepaths;")
+        mycursor.commit()
+        exe = mycursor.execute('SELECT COUNT(*) FROM filepaths')
+        for q in exe:
+            strTuple = str(q)
+        if strTuple == '(0,)':
+            msg = 'No content available for deletion'
+        else:
+            msg = 'Everything was successfully deleted'
+        showinfo(
+            title='DELETION',
+            message=msg)
     else:
         pass
     deletion.destroy()
@@ -99,33 +92,32 @@ def deletionMode():
             stripString2 = str(stripString1).rstrip(",")
             stripString3 = str(stripString2).lstrip('"').rstrip('"')
             stripString4 = str(stripString3).lstrip("'").rstrip("'")
-            sql = "DELETE FROM filepaths WHERE name = %s"
+            sql = "DELETE FROM filepaths WHERE name = ?"
             adr = (str(stripString4),)
             mycursor.execute(sql, adr)
-            db.commit()
+            mycursor.commit()
             deletion.destroy()
 
     # Display icons of apps that are already setup.
-    mycursor.execute("SELECT path FROM filepaths;")
-    db.commit()
+    conn = mycursor.execute("SELECT path FROM filepaths;")
 
-    for setPath in mycursor:
+    for setPath in conn:
         stripString1 = str(setPath).lstrip("(").rstrip(")")
         stripString2 = str(stripString1).rstrip(",")
         stripString3 = str(stripString2).lstrip('"').rstrip('"')
         stripString4 = str(stripString3).lstrip("'").rstrip("'")
         setPathList.append(stripString4)
+    mycursor.commit()
 
-    mycursor.execute("SELECT name FROM filepaths;")
-    db.commit()
+    conn = mycursor.execute("SELECT name FROM filepaths;")
 
-    for nameIcon in mycursor:
+    for nameIcon in conn:
         stripString1 = str(nameIcon).lstrip("(").rstrip(")")
         stripString2 = str(stripString1).rstrip(",")
         stripString3 = str(stripString2).lstrip('"').rstrip('"')
         stripString4 = str(stripString3).lstrip("'").rstrip("'")
         nameIconList.append(stripString4)
-
+    mycursor.commit()
     adding = 0
     for creatingIcon in setPathList:
         try:
@@ -143,10 +135,10 @@ def deletionMode():
         except Exception:
             pass
 
-    mycursor.execute("SELECT name FROM filepaths;")
-    db.commit()
+    conn = mycursor.execute("SELECT name FROM filepaths;")
+
     nameList = []
-    for name in mycursor:
+    for name in conn:
         stripString1 = str(name).lstrip("(").rstrip(")")
         stripString2 = str(stripString1).rstrip(",")
         stripString3 = str(stripString2).lstrip('"').rstrip('"')
@@ -158,6 +150,7 @@ def deletionMode():
     add_y_coordinate = 0
     add_y_coordinate2 = 0
     addIcon = 0
+
     if not nameList:
         emptyDel = Label(deletion,
                          text="There are no apps available to be deleted.\nYou can add some by clicking Create New on the main window",
@@ -182,6 +175,7 @@ def deletionMode():
             # Button that deletes every app that is set up for the voice assistant.
             deleteEverything = Button(deletion, text="Delete All", command=confirmDeleteAll, bg='pink', font="bold")
             deleteEverything.place(x=490, y=15)
+    mycursor.commit()
 
 
 # Lets the user set up a new app for the voice assistant.
@@ -192,6 +186,7 @@ def newCreate():
     new.geometry("600x200")
     new.configure(bg='#3E45A1')
     new.resizable(False, False)
+    new.grab_set()
     app_width2 = 400
     app_height2 = 300
     screen_width2 = root.winfo_screenwidth()
@@ -207,15 +202,12 @@ def newCreate():
             messagebox.showerror('Error', 'First, insert the name of the app')
         else:
             saveList.append(save)
-            file_path = filedialog.askopenfilename()
+            file_path = filedialog.askopenfilename(filetypes=(("Executable files", "*.exe"), ("All files", "*.*")))
             path.set(file_path)
             pathFile = path.get()
         try:
-            try:
-                mycursor.execute("INSERT INTO filepaths (path, name) VALUES (%s,%s)", (pathFile, save))
-                db.commit()
-            except mysql.connector.errors.InternalError:
-                showinfo(title="Error", message="Not connected to database.")
+            mycursor.execute("INSERT INTO filepaths (path, name) VALUES (?,?)", (pathFile, save))
+            mycursor.commit()
         except NameError:
             pass
         new.destroy()
@@ -306,3 +298,4 @@ else:
         GreetLabel.place(x=20, y=80)
 
 root.mainloop()
+mycursor.close()

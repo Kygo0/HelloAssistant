@@ -2,16 +2,11 @@ import os
 import speech_recognition
 import speech_recognition as sr
 import pyttsx3
-import mysql.connector
+import sqlite3
 
 WAKE = "hello assistant"
 
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="root",
-    database="pathdatabase"
-)
+mycursor = sqlite3.connect('Apps.db')
 
 
 def speak(text):
@@ -42,8 +37,8 @@ while a:
 
     if text.count(WAKE) > 0:
         speak("Hello")
-        mycursor.execute("SELECT name FROM filepaths")
-        for x in mycursor:
+        exe = mycursor.execute("SELECT name FROM filepaths")
+        for x in exe:
             exe = str(x).lstrip("(").rstrip(")")
             exe3 = str(exe).rstrip(",")
             exe4 = str(exe3).lstrip('"').rstrip('"')
@@ -51,8 +46,8 @@ while a:
             firstList.append(exe5.lower())
         text = get_audio().lower()
         if text.lower() in firstList:
-            mycursor.execute("SELECT path FROM filepaths WHERE name = '" + text + "'")
-            for x in mycursor:
+            exe = mycursor.execute("SELECT path FROM filepaths WHERE name = '" + text + "'")
+            for x in exe:
                 stripString1 = str(x).lstrip("(").rstrip(")")
                 stripString2 = str(stripString1).rstrip(",")
                 stripString3 = str(stripString2).lstrip('"').rstrip('"')
