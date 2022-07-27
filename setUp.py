@@ -21,6 +21,13 @@ setPathList = []
 nameIconList = []
 
 
+def on_destroy(event):
+    global deletion
+    if event.widget != deletion:
+        return
+    root.deiconify()
+
+
 # Deletes all the apps that are set up for the voice assistant.
 def confirmDeleteAll():
     global deletion
@@ -37,7 +44,7 @@ def confirmDeleteAll():
             msg = 'No content available for deletion'
         else:
             msg = 'Everything was successfully deleted'
-        showinfo(
+        messagebox.showinfo(
             title='DELETION',
             message=msg)
         mycursor.execute("DELETE FROM filepaths;")
@@ -57,6 +64,7 @@ def deletionMode():
     deletion.resizable(False, False)
     deletion.grab_set()
     deletion.configure(bg='#3E45A1')
+    deletion.bind("<Destroy>", on_destroy)
     app_width3 = 600
     app_height3 = 500
     screen_width3 = root.winfo_screenwidth()
@@ -84,7 +92,6 @@ def deletionMode():
             adr = (str(stripString4),)
             mycursor.execute(sql, adr)
             mycursor.commit()
-            root.deiconify()
             deletion.destroy()
 
     # Display icons of apps that are already setup.
@@ -96,6 +103,7 @@ def deletionMode():
         stripString3 = str(stripString2).lstrip('"').rstrip('"')
         stripString4 = str(stripString3).lstrip("'").rstrip("'")
         setPathList.append(stripString4)
+    setPathList_no_duplicates = list(dict.fromkeys(setPathList))
     mycursor.commit()
 
     conn = mycursor.execute("SELECT name FROM filepaths;")
@@ -106,9 +114,10 @@ def deletionMode():
         stripString3 = str(stripString2).lstrip('"').rstrip('"')
         stripString4 = str(stripString3).lstrip("'").rstrip("'")
         nameIconList.append(stripString4)
+    nameIconList_no_duplicates = list(dict.fromkeys(nameIconList))
     mycursor.commit()
     adding = 0
-    for creatingIcon in setPathList:
+    for creatingIcon in setPathList_no_duplicates:
         try:
             large, small = win32gui.ExtractIconEx(str(creatingIcon), 0)
             win32gui.DestroyIcon(large[0])
@@ -119,9 +128,9 @@ def deletionMode():
 
             hdc.SelectObject(hbmp)
             hdc.DrawIcon((0, 0), small[0])
-            hbmp.SaveBitmapFile(hdc, 'icons/' + str(nameIconList[adding]) + '.bmp')
+            hbmp.SaveBitmapFile(hdc, 'icons/' + str(nameIconList_no_duplicates[adding]) + '.bmp')
             adding += 1
-        except Exception:
+        except IndexError:
             pass
 
     conn = mycursor.execute("SELECT name FROM filepaths;")
@@ -136,21 +145,23 @@ def deletionMode():
             pass
         else:
             nameList.append(stripString4)
+    nameList_no_duplicates = list(dict.fromkeys(nameList))
+
     add_y_coordinate = 0
     add_y_coordinate2 = 0
     addIcon = 0
 
-    if not nameList:
+    if not nameList_no_duplicates:
         emptyDel = Label(deletion,
                          text="There are no apps available to be deleted.\nYou can add some by clicking Create New Apps on the main window",
                          bg='#3E45A1', padx=25, pady=50, font=30)
         emptyDel.place(relx=0.5, rely=0.5, anchor=CENTER)
     else:
-        for execute in nameList:
+        for execute in nameList_no_duplicates:
             Button(deletion, text=execute.upper(), command=deletePressed, padx=30, pady=30, bg='pink').place(x=0,
                                                                                                              y=add_y_coordinate)
             try:
-                image = Image.open('icons\\' + str(nameList[addIcon]) + '.bmp')
+                image = Image.open('icons\\' + str(nameList_no_duplicates[addIcon]) + '.bmp')
                 img = image.resize((15, 15))
                 my_img = ImageTk.PhotoImage(img)
                 lbl = Label(deletion, image=my_img, padx=5, pady=5)
@@ -196,7 +207,7 @@ def newCreate():
             file_path = filedialog.askopenfilename(filetypes=(("Executable files", "*.exe"), ("All files", "*.*")))
             path.set(file_path)
             pathFile = path.get()
-        try:
+        try:  ####
             mycursor.execute("INSERT INTO filepaths (path, name) VALUES (?,?)", (pathFile, save))
             mycursor.commit()
         except NameError:

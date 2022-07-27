@@ -44,8 +44,9 @@ while a:
             exe4 = str(exe3).lstrip('"').rstrip('"')
             exe5 = str(exe4).lstrip("'").rstrip("'")
             firstList.append(exe5.lower())
+        mylist = list(dict.fromkeys(firstList))
         text = get_audio().lower()
-        if text.lower() in firstList:
+        if text.lower() in mylist:
             exe = mycursor.execute("SELECT path FROM filepaths WHERE name = '" + text + "'")
             for x in exe:
                 stripString1 = str(x).lstrip("(").rstrip(")")
