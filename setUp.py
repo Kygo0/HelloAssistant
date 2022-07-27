@@ -207,7 +207,7 @@ def newCreate():
             file_path = filedialog.askopenfilename(filetypes=(("Executable files", "*.exe"), ("All files", "*.*")))
             path.set(file_path)
             pathFile = path.get()
-        try:  ####
+        try:
             mycursor.execute("INSERT INTO filepaths (path, name) VALUES (?,?)", (pathFile, save))
             mycursor.commit()
         except NameError:
