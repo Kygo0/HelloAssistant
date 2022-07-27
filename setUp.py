@@ -19,15 +19,6 @@ cur = mycursor.cursor()
 saveList = []
 setPathList = []
 nameIconList = []
-global counter
-counter = 0
-
-
-def on_destroy(event):
-    global counter
-    if event.widget != root:
-        counter = 0
-        return
 
 
 # Deletes all the apps that are set up for the voice assistant.
@@ -39,8 +30,6 @@ def confirmDeleteAll():
         icon=WARNING)
 
     if answer:
-        mycursor.execute("DELETE FROM filepaths;")
-        mycursor.commit()
         exe = mycursor.execute('SELECT COUNT(*) FROM filepaths')
         for q in exe:
             strTuple = str(q)
@@ -51,6 +40,8 @@ def confirmDeleteAll():
         showinfo(
             title='DELETION',
             message=msg)
+        mycursor.execute("DELETE FROM filepaths;")
+        mycursor.commit()
     else:
         pass
     deletion.destroy()
@@ -58,25 +49,22 @@ def confirmDeleteAll():
 
 # Lets the user choose what app to delete from the voice assistant.
 def deletionMode():
-    global counter, deletion
-    if counter < 1:
-        deletion = Toplevel()
-        deletion.iconphoto(False, PhotoImage(file='backgrounds/settings.ico'))
-        deletion.geometry("600x200")
-        deletion.resizable(False, False)
-        deletion.configure(bg='#3E45A1')
-        deletion.bind("<Destroy>", on_destroy)
-        app_width3 = 600
-        app_height3 = 500
-        screen_width3 = root.winfo_screenwidth()
-        screen_height3 = root.winfo_screenheight()
-        x3 = (screen_width3 / 2) - (app_width3 / 2)
-        y3 = (screen_height3 / 2) - (app_height3 / 2)
-        deletion.geometry(f'{app_width3}x{app_height3}+{int(x3)}+{int(y3)}')
-        deletion.title("Delete configured apps")
-        counter += 1
-    else:
-        pass
+    global deletion
+    root.iconify()
+    deletion = Toplevel()
+    deletion.iconphoto(False, PhotoImage(file='backgrounds/settings.ico'))
+    deletion.state('zoomed')
+    deletion.resizable(False, False)
+    deletion.grab_set()
+    deletion.configure(bg='#3E45A1')
+    app_width3 = 600
+    app_height3 = 500
+    screen_width3 = root.winfo_screenwidth()
+    screen_height3 = root.winfo_screenheight()
+    x3 = (screen_width3 / 2) - (app_width3 / 2)
+    y3 = (screen_height3 / 2) - (app_height3 / 2)
+    deletion.geometry(f'{app_width3}x{app_height3}+{int(x3)}+{int(y3)}')
+    deletion.title("Delete configured apps")
     # Saves the icons of every app.
     ico_x = win32api.GetSystemMetrics(win32con.SM_CXICON)
     ico_y = win32api.GetSystemMetrics(win32con.SM_CYICON)
@@ -96,6 +84,7 @@ def deletionMode():
             adr = (str(stripString4),)
             mycursor.execute(sql, adr)
             mycursor.commit()
+            root.deiconify()
             deletion.destroy()
 
     # Display icons of apps that are already setup.
@@ -153,28 +142,30 @@ def deletionMode():
 
     if not nameList:
         emptyDel = Label(deletion,
-                         text="There are no apps available to be deleted.\nYou can add some by clicking Create New on the main window",
+                         text="There are no apps available to be deleted.\nYou can add some by clicking Create New Apps on the main window",
                          bg='#3E45A1', padx=25, pady=50, font=30)
-        emptyDel.place(x=0, y=100)
+        emptyDel.place(relx=0.5, rely=0.5, anchor=CENTER)
     else:
         for execute in nameList:
             Button(deletion, text=execute.upper(), command=deletePressed, padx=30, pady=30, bg='pink').place(x=0,
                                                                                                              y=add_y_coordinate)
-
-            image = Image.open('icons\\' + str(nameList[addIcon]) + '.bmp')
-            img = image.resize((15, 15))
-            my_img = ImageTk.PhotoImage(img)
-            lbl = Label(deletion, image=my_img, padx=5, pady=5)
-            lbl.place(x=0, y=add_y_coordinate2)
-            lbl.image = my_img
-
+            try:
+                image = Image.open('icons\\' + str(nameList[addIcon]) + '.bmp')
+                img = image.resize((15, 15))
+                my_img = ImageTk.PhotoImage(img)
+                lbl = Label(deletion, image=my_img, padx=5, pady=5)
+                lbl.place(x=0, y=add_y_coordinate2)
+                lbl.image = my_img
+            except FileNotFoundError:
+                pass
             add_y_coordinate += 90
             add_y_coordinate2 += 90
             addIcon += 1
 
             # Button that deletes every app that is set up for the voice assistant.
-            deleteEverything = Button(deletion, text="Delete All", command=confirmDeleteAll, bg='pink', font="bold")
-            deleteEverything.place(x=490, y=15)
+            deleteEverything = Button(deletion, text="Delete All Apps", command=confirmDeleteAll, bg='pink',
+                                      font="bold", )
+            deleteEverything.place(relx=0.97, rely=0.01, anchor=NE)
     mycursor.commit()
 
 
@@ -260,10 +251,10 @@ except TclError:
 
 path = StringVar()
 
-createNew = Button(root, text='Create New', command=newCreate, bg='pink', font="bold")
+createNew = Button(root, text='Create App', command=newCreate, bg='pink', font="bold")
 createNew.place(x=10, y=170)
 
-deleteMode = Button(root, text="Delete", command=deletionMode, bg='pink', font='bold')
+deleteMode = Button(root, text="Delete App", command=deletionMode, bg='pink', font='bold')
 deleteMode.place(x=10, y=240)
 
 # Greet the user.
