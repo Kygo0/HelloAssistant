@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
-from tkinter.messagebox import askokcancel, showinfo, WARNING
+from tkinter.messagebox import askokcancel, WARNING
 import sqlite3
 from PIL import ImageTk, Image
 from datetime import datetime
