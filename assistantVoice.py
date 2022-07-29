@@ -25,7 +25,6 @@ def get_audio():
 
         try:
             said = r.recognize_google(audio)
-            print(said)
         except speech_recognition.UnknownValueError:
             pass
 
