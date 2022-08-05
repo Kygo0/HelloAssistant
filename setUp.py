@@ -9,6 +9,7 @@ import win32ui
 import win32gui
 import win32con
 import win32api
+import pywintypes
 
 mycursor = sqlite3.connect('Apps.db')
 
@@ -33,7 +34,7 @@ def confirmDeleteAll():
     global deletion
     answer = askokcancel(
         title='DELETION',
-        message='Are you sure?\nTHIS IS AN IRREVERSIBLE ACTION',
+        message='Delete and exit?',
         icon=WARNING)
 
     if answer:
@@ -119,17 +120,20 @@ def deletionMode():
     adding = 0
     for creatingIcon in setPathList_no_duplicates:
         try:
-            large, small = win32gui.ExtractIconEx(str(creatingIcon), 0)
-            win32gui.DestroyIcon(large[0])
-            hdc = win32ui.CreateDCFromHandle(win32gui.GetDC(0))
-            hbmp = win32ui.CreateBitmap()
-            hbmp.CreateCompatibleBitmap(hdc, ico_x, ico_y)
-            hdc = hdc.CreateCompatibleDC()
+            try:
+                large, small = win32gui.ExtractIconEx(str(creatingIcon), 0)
+                win32gui.DestroyIcon(large[0])
+                hdc = win32ui.CreateDCFromHandle(win32gui.GetDC(0))
+                hbmp = win32ui.CreateBitmap()
+                hbmp.CreateCompatibleBitmap(hdc, ico_x, ico_y)
+                hdc = hdc.CreateCompatibleDC()
 
-            hdc.SelectObject(hbmp)
-            hdc.DrawIcon((0, 0), small[0])
-            hbmp.SaveBitmapFile(hdc, 'icons/' + str(nameIconList_no_duplicates[adding]) + '.bmp')
-            adding += 1
+                hdc.SelectObject(hbmp)
+                hdc.DrawIcon((0, 0), small[0])
+                hbmp.SaveBitmapFile(hdc, 'icons/' + str(nameIconList_no_duplicates[adding]) + '.bmp')
+                adding += 1
+            except pywintypes:
+                pass
         except IndexError:
             pass
 
